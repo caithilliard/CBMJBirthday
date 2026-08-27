@@ -176,6 +176,7 @@ function startMusic() {
   if (!player || !player.playVideo) return;
   musicStarted = true;
   player.setVolume(100);
+  player.seekTo(144, true); // 2:24
   player.playVideo();
 }
 
