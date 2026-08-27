@@ -5,27 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cowboys & Aliens — Birthday Abduction</title>
 <style>
-  :root { --pink:#ff5e9c; --green:#d9ffb8; }
-  * { box-sizing:border-box; }
-  html,body { margin:0; min-height:100%; background:#020611; font-family:Arial,Helvetica,sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; min-height:100%; background:#020611; font-family:Arial,Helvetica,sans-serif; }
   body { display:flex; justify-content:center; align-items:center; overflow-x:hidden; }
+
   .stage {
     position:relative; width:min(100vw, 780px); min-height:100vh;
     display:flex; align-items:center; justify-content:center;
     overflow:hidden; background:#020611;
   }
+
   .invite {
     width:100%; height:auto; display:block;
     transform-origin:center center;
     animation: gentleFloat 7s ease-in-out infinite;
   }
-  /* Atmospheric motion layered over the ORIGINAL uploaded invite */
+
   .beam {
     position:absolute; left:31.5%; top:11.5%; width:37%; height:43%;
     background:radial-gradient(ellipse at center, rgba(235,255,210,.55), rgba(164,255,175,.18) 45%, transparent 72%);
     filter:blur(3px); mix-blend-mode:screen; pointer-events:none;
     animation: beamPulse 2.8s ease-in-out infinite;
   }
+
   .stars {
     position:absolute; inset:0; pointer-events:none; overflow:hidden;
     background:
@@ -36,6 +38,7 @@
       radial-gradient(circle at 22% 42%, rgba(255,255,255,.7) 0 1px, transparent 2px);
     animation: starShimmer 2.2s ease-in-out infinite alternate;
   }
+
   .spark {
     position:absolute; width:7px; height:7px; border-radius:50%;
     background:white; box-shadow:0 0 10px 3px rgba(255,255,255,.65);
@@ -45,12 +48,41 @@
   .s3{left:88%;top:37%;animation-delay:1.1s}.s4{left:18%;top:55%;animation-delay:1.6s}
   .s5{left:68%;top:73%;animation-delay:.4s}.s6{left:40%;top:8%;animation-delay:1.9s}
 
-  /* Tiny party confetti drifts slowly */
   .confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
   .c { position:absolute; width:4px; height:10px; background:rgba(255,255,255,.7); transform:rotate(25deg);
        animation:fall 8s linear infinite; }
   .c:nth-child(1){left:8%;animation-delay:-2s}.c:nth-child(2){left:26%;animation-delay:-6s}.c:nth-child(3){left:48%;animation-delay:-4s}
   .c:nth-child(4){left:71%;animation-delay:-1s}.c:nth-child(5){left:91%;animation-delay:-7s}
+
+  /* Opening screen */
+  .gate {
+    position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(circle at 50% 28%, rgba(114,255,170,.16), transparent 34%),
+      radial-gradient(circle at 50% 80%, rgba(255,74,151,.12), transparent 40%),
+      #020611;
+    color:white; text-align:center; transition:opacity .65s ease, visibility .65s ease;
+  }
+  .gate.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+  .gate-card { padding:28px; max-width:560px; }
+  .gate h1 {
+    margin:0 0 12px; font-size:clamp(34px,8vw,72px); letter-spacing:.08em;
+    text-transform:uppercase; text-shadow:0 0 22px rgba(166,255,193,.4);
+  }
+  .gate p { margin:0 0 24px; font-size:clamp(15px,3vw,22px); opacity:.86; }
+  .enter {
+    border:1px solid rgba(255,255,255,.3); border-radius:999px; padding:16px 28px;
+    background:#ff5e9c; color:#fff; font-weight:900; font-size:18px; letter-spacing:.08em;
+    cursor:pointer; box-shadow:0 0 35px rgba(255,94,156,.4);
+    animation: enterPulse 1.8s ease-in-out infinite;
+  }
+  .tiny { margin-top:12px; font-size:12px; opacity:.6; }
+
+  /* YouTube player stays in the page but visually unobtrusive after entry. */
+  .audio {
+    position:fixed; right:10px; bottom:10px; width:220px; height:124px; z-index:5;
+    opacity:.01; pointer-events:none;
+  }
 
   .controls {
     position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
@@ -58,29 +90,39 @@
     background:rgba(7,12,20,.78); border:1px solid rgba(255,255,255,.22);
     backdrop-filter:blur(10px); border-radius:999px; padding:8px 10px;
     box-shadow:0 8px 28px rgba(0,0,0,.35);
+    opacity:0; pointer-events:none; transition:opacity .5s ease;
   }
+  body.entered .controls { opacity:1; pointer-events:auto; }
   button, a {
     border:0; border-radius:999px; padding:10px 14px; font-weight:700;
     text-decoration:none; color:white; background:#222a35; cursor:pointer;
   }
-  button.primary { background:var(--pink); }
   a.spotify { background:#1ed760; color:#07140a; }
-  .hint { color:#dfe7ee; font-size:12px; max-width:170px; line-height:1.2; }
 
   @keyframes gentleFloat { 0%,100%{transform:scale(1.0) translateY(0)} 50%{transform:scale(1.012) translateY(-4px)} }
   @keyframes beamPulse { 0%,100%{opacity:.45; transform:scaleY(.97)} 50%{opacity:.9; transform:scaleY(1.03)} }
   @keyframes starShimmer { 0%{opacity:.45; filter:brightness(.8)} 100%{opacity:1; filter:brightness(1.35)} }
   @keyframes sparkle { 0%,100%{opacity:.2; transform:scale(.6)} 50%{opacity:1; transform:scale(1.4)} }
   @keyframes fall { 0%{transform:translate3d(0,-30px,0) rotate(25deg); opacity:0} 12%{opacity:.7} 100%{transform:translate3d(18px,105vh,0) rotate(185deg);opacity:0} }
+  @keyframes enterPulse { 0%,100%{transform:scale(1); box-shadow:0 0 25px rgba(255,94,156,.32)} 50%{transform:scale(1.045); box-shadow:0 0 42px rgba(255,94,156,.58)} }
 
   @media (max-width:600px){
     .controls { width:calc(100% - 24px); justify-content:center; }
-    .hint { display:none; }
+    .controls .spotify { display:none; }
   }
 </style>
 </head>
 <body>
-  <main class="stage" aria-label="Animated Cowboys and Aliens birthday invitation">
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <h1>Cowboys & Aliens</h1>
+      <p>🚀 Your birthday abduction awaits…</p>
+      <button class="enter" id="enter">TAP TO ENTER</button>
+      <div class="tiny">Turn your sound on 👽🔊</div>
+    </div>
+  </div>
+
+  <main class="stage">
     <img class="invite" src="invite.png" alt="Cowboys and Aliens birthday invitation">
     <div class="beam"></div>
     <div class="stars">
@@ -92,13 +134,73 @@
     </div>
   </main>
 
+  <!-- Official Jamiroquai YouTube upload: Space Cowboy (David Morales Mix) -->
+  <div class="audio">
+    <div id="ytplayer"></div>
+  </div>
+
   <div class="controls">
-    <span class="hint">Tap play to hear the Space Cowboy vibe.</span>
-    <button class="primary" onclick="document.getElementById('player').scrollIntoView({behavior:'smooth',block:'center'})">🎵 Music</button>
-    <a class="spotify" target="_blank" rel="noopener" href="https://open.spotify.com/track/5z0PXFuxL2SZLPHLDlMDfL">Open Space Cowboy</a>
+    <button id="pause">⏸ Pause music</button>
+    <a class="spotify" target="_blank" rel="noopener" href="https://open.spotify.com/track/5z0PXFuxL2SZLPHLDlMDfL">Open on Spotify</a>
   </div>
-  <div id="player" style="position:fixed; left:50%; bottom:-1000px; width:1px; height:1px;">
-    <!-- The official Spotify track page is linked above. -->
-  </div>
+
+<script>
+let player;
+let musicStarted = false;
+let pendingPlay = null;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('ytplayer', {
+    width: '220',
+    height: '124',
+    videoId: 'Hp4OU17P0Lw',
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      playsinline: 1,
+      rel: 0,
+      modestbranding: 1
+    },
+    events: {
+      onReady: () => {
+        if (pendingPlay) startMusic();
+      },
+      onAutoplayBlocked: () => {
+        window.open('https://www.youtube.com/watch?v=Hp4OU17P0Lw', '_blank');
+      }
+    }
+  });
+}
+
+function startMusic() {
+  if (!player || !player.playVideo) return;
+  musicStarted = true;
+  player.setVolume(100);
+  player.playVideo();
+}
+
+document.getElementById('enter').addEventListener('click', () => {
+  document.body.classList.add('entered');
+  document.getElementById('gate').classList.add('hidden');
+
+  // Randomise the musical entrance: 2–5 seconds after entry.
+  const delay = 2000 + Math.floor(Math.random() * 3000);
+  pendingPlay = true;
+  setTimeout(startMusic, delay);
+});
+
+document.getElementById('pause').addEventListener('click', () => {
+  if (!player) return;
+  if (musicStarted) {
+    player.pauseVideo();
+    musicStarted = false;
+    document.getElementById('pause').textContent = '▶ Play music';
+  } else {
+    startMusic();
+    document.getElementById('pause').textContent = '⏸ Pause music';
+  }
+});
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
